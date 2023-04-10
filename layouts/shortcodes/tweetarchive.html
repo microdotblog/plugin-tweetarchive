@@ -67,7 +67,7 @@
 		
 		showProgress();
 		
-		let url = "http://localhost:3000/twitter/archive/" + site_id + "/" + path;
+		let url = "https://micro.blog/twitter/archive/" + site_id + "/" + path;
 		fetch(url).then(response => response.json()).then(data => {
 			for (var item of data.items) {
 				var post_div = document.createElement("div");
@@ -101,7 +101,7 @@
 	function loadYears(site_id) {
 		const year_tag = document.getElementById("years_select");
 
-		let url = "http://localhost:3000/twitter/archive/" + site_id + "/years.json";
+		let url = "https://micro.blog/twitter/archive/" + site_id + "/years.json";
 		fetch(url).then(response => response.json()).then(data => {
 			for (var y of data) {
 				var option_tag = document.createElement("option");
@@ -112,7 +112,7 @@
 		});
 	}
 
-	let site_id = 8; // {{ $site_id := .Get 0 }};
+	let site_id = {{ $site_id := .Get 0 }};
 	var year = "";
 	var month = "";
 
