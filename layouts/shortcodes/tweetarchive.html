@@ -41,12 +41,31 @@
 		width: 12px;
 		height: 12px;
 	}
+	
+	#progress_spinner {
+		visibility: hidden;
+		width: 25px;
+		height: 25px;
+		vertical-align: middle;
+	}
 </style>
 
 <script>
-	function loadTweets(site_id, path) {		
+	function showProgress() {	
+		let progress_img = document.getElementById("progress_spinner");
+		progress_img.style.visibility = "visible";
+	}
+	
+	function hideProgress() {		
+		let progress_img = document.getElementById("progress_spinner");
+		progress_img.style.visibility = "hidden";
+	}
+	
+	function loadTweets(site_id, path) {
 		let tweets_div = document.getElementById("tweets");
 		tweets_div.innerHTML = "";
+		
+		showProgress();
 		
 		let url = "http://localhost:3000/twitter/archive/" + site_id + "/" + path;
 		fetch(url).then(response => response.json()).then(data => {
@@ -74,6 +93,8 @@
 	
 				tweets_div.appendChild(post_div);
 			}
+
+			hideProgress();
 		});
 	}
 	
@@ -92,8 +113,8 @@
 	}
 
 	let site_id = 8; // {{ $site_id := .Get 0 }};
-	var year = 2023;
-	var month = 1;
+	var year = "";
+	var month = "";
 
 	document.addEventListener("DOMContentLoaded", () => {
 		loadTweets(site_id, "recent.json");
@@ -145,7 +166,10 @@
 	<select id="months_select">
 		<option value="">Month</option>
 	</select>
-	<input type="search" id="search" size="20" placeholder="Search tweets...">
+	
+	<input type="search" id="search" size="20" placeholder="Search tweets..."> 
+	
+	<img id="progress_spinner" src="https://micro.blog/images/progress_spinner.svg?v=20230409.1" width="25" height="25" alt="Progress spinner">
 </form>
 
 <div id="tweets">
