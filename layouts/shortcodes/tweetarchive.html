@@ -98,6 +98,8 @@
 		showProgress();
 		hideFooter();
 		clearTweets();
+
+		let tweets_div = document.getElementById("tweets");
 		
 		let url = "https://micro.blog/twitter/archive/" + site_id + "/" + path;
 		fetch(url).then(response => response.json()).then(data => {
