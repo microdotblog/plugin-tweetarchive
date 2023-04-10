@@ -49,6 +49,10 @@
 		height: 25px;
 		vertical-align: middle;
 	}
+	
+	#footer {
+		visibility: hidden;
+	}
 </style>
 
 <script>
@@ -60,6 +64,13 @@
 	function hideProgress() {		
 		let progress_img = document.getElementById("progress_spinner");
 		progress_img.style.visibility = "hidden";
+	}
+	
+	function showFooter() {
+		let footer_tags = document.getElementsByTagName("footer");
+		for (var tag of footer_tags) {
+			tag.style.visibility = "visible";
+		}
 	}
 	
 	function loadTweets(site_id, path) {
@@ -96,6 +107,7 @@
 			}
 
 			hideProgress();
+			showFooter();
 		});
 	}
 	
