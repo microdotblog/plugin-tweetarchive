@@ -97,12 +97,13 @@
 	function loadTweets(site_id, path) {		
 		showProgress();
 		hideFooter();
-		clearTweets();
 
 		let tweets_div = document.getElementById("tweets");
 		
 		let url = "https://micro.blog/twitter/archive/" + site_id + "/" + path;
 		fetch(url).then(response => response.json()).then(data => {
+			clearTweets();
+
 			for (var item of data.items) {
 				var post_div = document.createElement("div");
 				post_div.setAttribute("class", "tweet");
