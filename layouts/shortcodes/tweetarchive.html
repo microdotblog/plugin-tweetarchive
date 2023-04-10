@@ -77,7 +77,7 @@
 	function hideFooter() {
 		let footer_tags = document.getElementsByTagName("footer");
 		if (footer_tags.length > 0) {
-			let last_tag = footer_tags[elements.length - 1];
+			let last_tag = footer_tags[footer_tags.length - 1];
 			last_tag.style.visibility = "hidden";
 		}
 	}
