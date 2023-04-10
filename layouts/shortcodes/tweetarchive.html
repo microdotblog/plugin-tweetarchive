@@ -1,0 +1,132 @@
+<style>
+	.tweet {
+		font-family: "Avenir Next", Avenir, "-apple-system", Helvetica, Arial, sans-serif;
+		padding-top: 10px;
+		padding-bottom: 10px;
+	}
+	
+	.tweet time {
+		color: gray;
+		font-size: 14px;
+	}
+	
+	.tweet .post {
+		font-size: 17px;
+		line-height: 22px;
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}
+	
+	.tweet .twitter_link {
+		padding-top: 5px;
+		padding-bottom: 5px;
+		padding-right: 5px;
+	}
+	
+	.tweet .twitter_link svg {
+		color: #26a7de;
+		width: 12px;
+		height: 12px;
+	}
+</style>
+
+<script>
+	function loadTweets(site_id, path) {		
+		let tweets_div = document.getElementById("tweets");
+		tweets_div.innerHTML = "";
+		
+		let url = "http://localhost:3000/twitter/archive/" + site_id + "/" + path;
+		fetch(url).then(response => response.json()).then(data => {
+			for (var item of data.items) {
+				var post_div = document.createElement("div");
+				post_div.setAttribute("class", "tweet");
+				
+				var content_tag = document.createElement("div");
+				content_tag.setAttribute("class", "post");
+				content_tag.innerHTML = item.content_html;
+				post_div.appendChild(content_tag);
+	
+				var tweet_link = document.createElement("a");
+				tweet_link.setAttribute("href", item._microblog.twitter_url);
+				tweet_link.setAttribute("class", "twitter_link");
+				tweet_link.innerHTML = '<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Twitter</title><path fill="currentColor" d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>';
+				post_div.appendChild(tweet_link);
+	
+				var time_tag = document.createElement("time");
+				time_tag.innerText = item.date_published;
+				post_div.appendChild(time_tag);
+	
+				tweets_div.appendChild(post_div);
+			}
+		});
+	}
+	
+	function loadYears(site_id) {
+		const year_tag = document.getElementById("years_select");
+
+		let url = "http://localhost:3000/twitter/archive/" + site_id + "/years.json";
+		fetch(url).then(response => response.json()).then(data => {
+			for (var y of data) {
+				var option_tag = document.createElement("option");
+				option_tag.setAttribute("value", y);
+				option_tag.innerText = y;
+				year_tag.appendChild(option_tag);
+			}
+		});
+	}
+
+	let site_id = 8; // {{ $site_id := .Get 0 }};
+	var year = 2023;
+	var month = 1;
+
+	document.addEventListener("DOMContentLoaded", () => {
+		loadTweets(site_id, "recent.json");
+		loadYears(site_id);
+
+		const year_tag = document.getElementById("years_select");
+		year_tag.addEventListener("change", (event) => {
+			year = event.target.value;
+			loadTweets(site_id, `${year}/${month}.json`)
+		});	
+
+		const months_tag = document.getElementById("months_select");
+		months_tag.addEventListener("change", (event) => {
+			month = event.target.value;
+			loadTweets(site_id, `${year}/${month}.json`)
+		});
+
+		for (let i = 0; i < 12; i++) {
+			const d = new Date(2000, i, 1);
+			const month_abbreviation = d.toLocaleDateString(navigator.language, { month: "short" });
+			
+			var option_tag = document.createElement("option");
+			option_tag.setAttribute("value", i + 1);
+			option_tag.innerText = month_abbreviation;
+			months_tag.appendChild(option_tag);
+		}
+		
+		const search_tag = document.getElementById("search");
+		search_tag.addEventListener("change", (event) => {
+			var q = event.target.value;
+			loadTweets(site_id, `search.json?q=${q}`)
+		});
+
+		const form_tag = document.getElementById("tweets_form");
+		form_tag.addEventListener("submit", (event) => {
+			event.preventDefault();
+		});
+	});	
+</script>
+
+<form id="tweets_form">
+	<select id="years_select">
+		<option value="">Year</option>
+	</select>
+	<select id="months_select">
+		<option value="">Month</option>
+	</select>
+	<input type="search" id="search" size="30" placeholder="Search tweets...">
+</form>
+
+<div id="tweets">
+</div>
