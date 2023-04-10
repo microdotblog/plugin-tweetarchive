@@ -68,16 +68,36 @@
 	
 	function showFooter() {
 		let footer_tags = document.getElementsByTagName("footer");
+		if (footer_tags.length > 0) {
+			let last_tag = footer_tags[elements.length - 1];
+			last_tag.style.visibility = "visible";
+		}
+	}
+
+	function hideFooter() {
+		let footer_tags = document.getElementsByTagName("footer");
+		if (footer_tags.length > 0) {
+			let last_tag = footer_tags[elements.length - 1];
+			last_tag.style.visibility = "hidden";
+		}
+	}
+
+	function showFooter() {
+		let footer_tags = document.getElementsByTagName("footer");
 		for (var tag of footer_tags) {
 			tag.style.visibility = "visible";
 		}
 	}
 	
-	function loadTweets(site_id, path) {
+	function clearTweets() {
 		let tweets_div = document.getElementById("tweets");
-		tweets_div.innerHTML = "";
-		
+		tweets_div.innerHTML = "";		
+	}
+	
+	function loadTweets(site_id, path) {		
 		showProgress();
+		hideFooter();
+		clearTweets();
 		
 		let url = "https://micro.blog/twitter/archive/" + site_id + "/" + path;
 		fetch(url).then(response => response.json()).then(data => {
