@@ -126,7 +126,7 @@
 				const date_options = { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' };
 	
 				var time_tag = document.createElement("time");
-				time_tag.innerText = d.toLocaleDateString("en-US", date_options);
+				time_tag.innerText = d.toLocaleDateString(undefined, date_options);
 				post_div.appendChild(time_tag);
 	
 				tweets_div.appendChild(post_div);
