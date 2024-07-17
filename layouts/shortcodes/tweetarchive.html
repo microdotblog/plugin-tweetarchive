@@ -156,7 +156,17 @@
 	var month = "";
 
 	document.addEventListener("DOMContentLoaded", () => {
-		loadTweets(site_id, "recent.json");
+		const url = new URL(window.location.href);
+		const params = new URLSearchParams(url.search);
+		const q = params.get("q");
+		if (q && (q.length > 0)) {
+			document.getElementById("search").value = q;
+			loadTweets(site_id, `search.json?q=${q}`)
+		}
+		else {
+			loadTweets(site_id, "recent.json");
+		}
+
 		loadYears(site_id);
 
 		const year_tag = document.getElementById("years_select");
