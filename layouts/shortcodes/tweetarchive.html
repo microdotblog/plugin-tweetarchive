@@ -187,8 +187,12 @@
 		
 		const search_tag = document.getElementById("search");
 		search_tag.addEventListener("change", (event) => {
-			var q = event.target.value;
+			let q = event.target.value;
 			loadTweets(site_id, `search.json?q=${q}`)
+
+			const url = new URL(window.location.href);
+			url.searchParams.set("q", q);
+			history.pushState({}, "", url);
 		});
 
 		const form_tag = document.getElementById("tweets_form");
